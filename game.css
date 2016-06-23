@@ -20,7 +20,7 @@ body{
     text-align: center;
 }
 canvas {
-  transform: translate(0vw,7vh);
+  transform: translate(0vw,0vh);
     width: 60vw;
     height: 60vh;
     border: 2px solid #d3d3d3;
@@ -31,19 +31,20 @@ canvas {
 }
 h1{
     font-feature-settings: normal;
+    font-size: 3.5vw;
     font-family: Geneva, Tahoma, Verdana, sans-serif;
     font-variant: small-caps;
     font-style: normal;
     color: #ffe424;
 }
 #message{
-    transform: translate(0,7vh);
+    transform: translate(0,0vh);
     margin: 0px ;
     padding: 0px;
     color: #ff0e16;
 }
 #message2{
-    transform: translate(0,7vh);
+    transform: translate(0,0vh);
     margin: 0px ;
     padding: 0px;
     color: #ff0e16;
