@@ -1,12 +1,14 @@
 function jav(){
 
-  var e,score = 0,pause = 1,speed = 1,yspeed = 0;
-  //yspeed is speed along y axis
+  var e,score = 0,pause = 1,pspeed = 1,yspeed = 0,xspeed = 0;
+  //yspeed is speed along y axis xspeed is along x axis
+  //pspeed is speed of paddle and
   var reqid,frames = 1;
-  //lives = 3,toggleinvisible = 0;
+  lives = 3;
+  //,toggleinvisible = 0;
 
   var arr = [];   //t is used to cycle the images for running of falcon
-  document.getElementById('message').innerHTML = 'Press Enter to start the game, I for instructions'
+  document.getElementById('message').innerHTML = 'Press Enter to start the game, '
   +'Up arrow and down arrow will control the paddle';
 
 
@@ -16,7 +18,6 @@ function jav(){
   }  // pause is 1 if it's pause
   //reqid is the requestID used and al tells if game over alert message has been
   // given or not, frames is to control the increase of score
-  //lives plays the role of lives
   //arr is array of key checker
   var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame ||
   window.webkitCancelAnimationFrame;
@@ -35,7 +36,6 @@ function jav(){
         }
     if(arr[73]){
       arr[73] = 0;
-      //window.location.href = "Instructions.html";
     }
     if(e != 13 && e!= 38 && e!=40)
       arr[e.keyCode] = 0;  //enter(keycode 13) is a special case, as it is the
@@ -100,47 +100,53 @@ function jav(){
   ball.update();
   paddle.draw();
   ball.draw();
-  document.getElementById('message2').innerHTML = "Score: "+score;
-  ballspeed = 2;
+  document.getElementById('message2').innerHTML = "Score: "+score+" "+"Lives: "+lives;
+  xspeed = 2;
 
   function upd(){
     if( arr[13] == 1 && pause == 0){
       pause = 1;
-      document.getElementById('message').innerHTML = 'Press I for instructions';
+      document.getElementById('message').innerHTML = 'Press enter for start/pause';
       arr[13] =0;
     }
     else if(arr[13] == 1 && pause == 1){
-      document.getElementById('message').innerHTML = 'Press I for instructions';
+      document.getElementById('message').innerHTML = 'Press enter for start/pause';
       pause = 0;
       arr[13] = 0;
       }
     if(!pause){
-      //if(Math.floor(score) == score && score >= 499.9)
-      //if(Math.floor(score) % 500 == 0 && frames ==9 )
-        //lives++;
-        //lives are increased everytime 50 points are scored
       frames++;
-      //if(frames % 10 == 0) {
-       //score += 1;
-    //}
       if(frames == 500) {
         frames = 1;       //frames becomes 1 again to prevent large values
         }
     //paddle controls
     if(arr[38] == 1 && paddle.y > 0){
       paddle.y -= 2;
+      pspeed = -2;
     }
     if(arr[40] == 1 && paddle.y < 120){
       paddle.y += 2;
+      pspeed = 2;
     }
+    if(arr[40] != 1 && arr[38] !=1)
+      pspeed = 0;
     if(ball.x >= 295)
-      ballspeed = -ballspeed;
+      xspeed = -xspeed;
     else if (ball.crashWith(paddle)){
-      score++;
-      ballspeed = -ballspeed;
-      paddle.y = randomIntFromInterval(0,120);
-    }
-    ball.x += ballspeed;
+        score++;
+        xspeed = -xspeed;
+        if(score %3 == 0)
+          xspeed += 0.5;
+        yspeed += pspeed/5;
+        paddle.y = randomIntFromInterval(0,120);
+      }
+    if(ball.y >= 145.5)
+      yspeed = -yspeed;
+    else if(ball.y <= 4)
+      yspeed = -yspeed;
+
+    ball.x += xspeed;
+    ball.y += yspeed;
     paddle.update();
     ball.update();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -150,7 +156,7 @@ function jav(){
    }
     paddle.draw();
     ball.draw();
-    document.getElementById('message2').innerHTML ="Score: "+score;
+    document.getElementById('message2').innerHTML ="Score: "+score+"            Lives: "+lives;
   }
 
   function animate() {
@@ -164,14 +170,16 @@ function jav(){
   }
   animate();
   setInterval(function(){
-
-
-      /*if((falcon.crashWith(obstacle1) ||falcon.crashWith(obstacle2) ||
-      falcon.crashWith(obstacle3)) && lives == 0)
-        stopAnimation();*/
-      if(ball.x == 0){
-      //if(lives!=0)
-        //lives--;
+      if(ball.x <= 0){
+      if(lives != 0){
+        lives--;
+        ball.x = 100;
+        ball.y = 75.5;
+        xspeed = -xspeed;
+        pause = 1;
+        document.getElementById('message').innerHTML = 'Life Lost! '+lives+' lives left '+'Press enter for start/pause';
+      }
+      else
         stopAnimation();
       //if(lives)
       }
